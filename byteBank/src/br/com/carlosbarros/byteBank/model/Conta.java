@@ -10,38 +10,77 @@ public class Conta {
 	private int numero;
 	private String titular;
 	
+	public Conta() {
+		this("Anonymous");
+	}
+	
+	public Conta(String titular) {
+		this(titular, 0.0);
+	}
+
+	public Conta(String titular, double saldoInicial) {
+		this.titular = titular;
+		this.saldo = saldoInicial;
+		System.out.println("\nConta: " + this.titular + " criada com sucesso. " +
+			"\n\tSaldo inicial = R$" + this.saldo);
+	}
 	
 	public void depositar(double valor) throws ContaOperationsException {
-		System.out.println("\nRealizando a deposito");
+		System.out.println("\nRealizando a deposito na conta de " + this.titular);
 		System.out.println("Saldo anterior: R$" + this.saldo);
 		System.out.println("Valor depositado: R$" + valor);
 		
 		if(valor > 0) {
 			this.saldo += valor;
-			System.out.println("Saldo da conta corrente: R$" + this.saldo);
+			exibirSaldo();
 		} else {
 			throw new ValorNegativoException("Não é possível depositar valores negativos, "
 					+ "operação não realizada");
 		}
 	}
 
-	public void retirar(double valor) throws ContaOperationsException {
-		System.out.println("\nRealizando a retirada");
+	public void retirar(double valorRetirado) throws ContaOperationsException {
+		System.out.println("\nRealizando a retirada da conta de " + this.titular);
 		System.out.println("Saldo anterior: R$" + this.saldo);
-		System.out.println("Valor retirado: R$" + valor);
+		System.out.println("Valor retirado: R$" + valorRetirado);
 
-		if (this.saldo >= valor) {
-			this.saldo -= valor;
-			System.out.println("Saldo da conta corrente: R$" + this.saldo);
+		if (verificaSaldo(valorRetirado)) {
+			this.saldo -= valorRetirado;
+			exibirSaldo();
 		} else {
 			System.out.println();
 			throw new SaldoInsuficienteException("Saldo insuficiente, não é possível retirar R$" +
-					valor + " de R$"+ this.saldo + ". Operação não realizada");
+					valorRetirado + " de R$"+ this.saldo + ". Operação não realizada");
 		}
 	}
 	
-	public void transferir(Conta origem, Conta destino, double valor) {
-		
+	public void transferir(double valor,Conta destino) throws ContaOperationsException {
+		System.out.println("Tentando Transferir R$" + valor + " da conta de " + 
+		this.titular + " para conta de " + destino.getTitular());
+		if(verificaSaldo(valor)) {
+			System.out.println("\nTransferindo R$" + valor + " da conta de " +
+			this.titular + " para a conta de " + destino.getTitular());
+			this.retirar(valor);
+			destino.depositar(valor);
+		}
+	}
+	
+	public boolean verificaSaldo(double valorRetirado) {
+		boolean saldoSuficiente = false;
+		if(this.saldo >= valorRetirado) {
+			System.out.println("\t(Saldo suficiente para operação.)");
+			saldoSuficiente = true;
+		} else {
+			System.out.println("\t(Saldo insuficiente para operação.)");
+		}
+		return saldoSuficiente;		
+	}
+	
+	public void exibirSaldo() {
+		if(this.titular != null && !this.titular.isEmpty()) {
+			System.out.println("Conta de " + this.titular);
+		}
+		System.out.println("\tSaldo atual = R$" + this.saldo);
 	}
 	
 	public double getSaldo() {
