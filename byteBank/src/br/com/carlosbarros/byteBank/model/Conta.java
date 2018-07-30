@@ -8,7 +8,7 @@ public class Conta {
 	private double saldo;
 	private int agencia;
 	private int numero;
-	private String titular;
+	private Cliente titular;
 	
 	public Conta() {
 		this("Anonymous");
@@ -19,14 +19,14 @@ public class Conta {
 	}
 
 	public Conta(String titular, double saldoInicial) {
-		this.titular = titular;
+		this.titular = new Cliente(titular, "119.921.007-21", "Analista de Sistemas");
 		this.saldo = saldoInicial;
-		System.out.println("\nConta: " + this.titular + " criada com sucesso. " +
+		System.out.println("\nConta: " + this.titular.getNome() + " criada com sucesso. " +
 			"\n\tSaldo inicial = R$" + this.saldo);
 	}
 	
 	public void depositar(double valor) throws ContaOperationsException {
-		System.out.println("\nRealizando a deposito na conta de " + this.titular);
+		System.out.println("\nRealizando a deposito na conta de " + this.titular.getNome());
 		System.out.println("Saldo anterior: R$" + this.saldo);
 		System.out.println("Valor depositado: R$" + valor);
 		
@@ -40,7 +40,7 @@ public class Conta {
 	}
 
 	public void retirar(double valorRetirado) throws ContaOperationsException {
-		System.out.println("\nRealizando a retirada da conta de " + this.titular);
+		System.out.println("\nRealizando a retirada da conta de " + this.titular.getNome());
 		System.out.println("Saldo anterior: R$" + this.saldo);
 		System.out.println("Valor retirado: R$" + valorRetirado);
 
@@ -56,10 +56,10 @@ public class Conta {
 	
 	public void transferir(double valor,Conta destino) throws ContaOperationsException {
 		System.out.println("Tentando Transferir R$" + valor + " da conta de " + 
-		this.titular + " para conta de " + destino.getTitular());
+		this.titular.getNome() + " para conta de " + destino.getTitular().getNome());
 		if(verificaSaldo(valor)) {
 			System.out.println("\nTransferindo R$" + valor + " da conta de " +
-			this.titular + " para a conta de " + destino.getTitular());
+			this.titular.getNome() + " para a conta de " + destino.getTitular().getNome());
 			this.retirar(valor);
 			destino.depositar(valor);
 		}
@@ -77,8 +77,8 @@ public class Conta {
 	}
 	
 	public void exibirSaldo() {
-		if(this.titular != null && !this.titular.isEmpty()) {
-			System.out.println("Conta de " + this.titular);
+		if(this.titular != null && !this.titular.getNome().isEmpty()) {
+			System.out.println("Conta de " + this.titular.getNome());
 		}
 		System.out.println("\tSaldo atual = R$" + this.saldo);
 	}
@@ -101,10 +101,10 @@ public class Conta {
 	public void setNumero(int numero) {
 		this.numero = numero;
 	}
-	public String getTitular() {
+	public Cliente getTitular() {
 		return titular;
 	}
-	public void setTitular(String titular) {
+	public void setTitular(Cliente titular) {
 		this.titular = titular;
 	}	
 }
