@@ -10,19 +10,34 @@ public class Conta {
 	private int numero;
 	private Cliente titular;
 	
+	public static int numeroContaGeral = 0;
+	
 	public Conta() {
-		this("Anonymous");
+		this(criaCliente("Desconhecido", "222.222.222-22", "Profissão desconhecida"));
 	}
 	
-	public Conta(String titular) {
+	public Conta(Cliente titular) {
 		this(titular, 0.0);
 	}
 
-	public Conta(String titular, double saldoInicial) {
-		this.titular = new Cliente(titular, "119.921.007-21", "Analista de Sistemas");
-		this.saldo = saldoInicial;
+	public Conta(Cliente titular, double saldoInicial) {
+		this(titular, saldoInicial, 4092, 0);
+	}
+
+	public Conta(Cliente titular, double saldo, int agencia, int numeroConta) {
+		this.titular = titular;
+		this.saldo = saldo;
+		this.agencia = agencia;
+		this.numero = numeroConta == 0 ? ++numeroContaGeral : numeroConta;
 		System.out.println("\nConta: " + this.titular.getNome() + " criada com sucesso. " +
-			"\n\tSaldo inicial = R$" + this.saldo);
+			"\nCPF = " + titular.getCpf() + " Profissão= " + titular.getProfissao() +
+			"\nAgência = " + this.agencia + " Numero da Conta = " + this.numero +
+				"\n\tSaldo inicial = R$" + this.saldo);
+
+	}
+	
+	public static Cliente criaCliente(String nome, String cpf, String profissao) {
+		return new Cliente(nome, cpf, profissao);
 	}
 	
 	public void depositar(double valor) throws ContaOperationsException {
@@ -44,7 +59,7 @@ public class Conta {
 		System.out.println("Saldo anterior: R$" + this.saldo);
 		System.out.println("Valor retirado: R$" + valorRetirado);
 
-		if (verificaSaldo(valorRetirado)) {
+		if (verificaSaldo(valorRetirado) && testarValorNegativo(valorRetirado)) {
 			this.saldo -= valorRetirado;
 			exibirSaldo();
 		} else {
@@ -81,6 +96,17 @@ public class Conta {
 			System.out.println("Conta de " + this.titular.getNome());
 		}
 		System.out.println("\tSaldo atual = R$" + this.saldo);
+	}
+	
+	public boolean testarValorNegativo(double valorTestado) throws ValorNegativoException {
+		boolean isValorOk = false;
+		if(valorTestado > 0) {
+			isValorOk = true;			
+		} else {
+			throw new ValorNegativoException("Não é possível realizar esta operação "
+					+ "com valor negativo. \nOperação não realizada");
+		}
+		return isValorOk;
 	}
 	
 	public double getSaldo() {

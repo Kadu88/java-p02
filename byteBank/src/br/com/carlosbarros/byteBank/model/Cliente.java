@@ -2,9 +2,9 @@ package br.com.carlosbarros.byteBank.model;
 
 public class Cliente {
 
-	String nome;
-	String cpf;
-	String profissao;
+	private String nome;
+	private String cpf;
+	private String profissao;
 	
 	public Cliente() {
 		this("Não informado");

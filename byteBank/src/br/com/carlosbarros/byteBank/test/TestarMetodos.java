@@ -1,9 +1,10 @@
 package br.com.carlosbarros.byteBank.test;
 
 import br.com.carlosbarros.byteBank.exception.ContaOperationsException;
+import br.com.carlosbarros.byteBank.model.Cliente;
 import br.com.carlosbarros.byteBank.model.Conta;;
 
-public class TestaMetodos extends TestarGenerico {
+public class TestarMetodos extends TestarGenerico {
 
 	public static void main(String[] args) {
 		
@@ -24,8 +25,11 @@ public class TestaMetodos extends TestarGenerico {
 	}
 	
 	private static void testarTransferencia() throws ContaOperationsException {
-		Conta conta_01 = new Conta("Marcela", 1000.00);		
-		Conta conta_02 = new Conta("Jorge", 300.00);
+		Cliente cliente_01 = new Cliente("Marcela");
+		Cliente cliente_02 = new Cliente("Jorge");
+		
+		Conta conta_01 = new Conta(cliente_01, 1000.00);		
+		Conta conta_02 = new Conta(cliente_02, 300.00);
 		conta_01.transferir(500.00, conta_02);
 	}
 	
